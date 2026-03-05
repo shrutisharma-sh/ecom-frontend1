@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { registerUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("USER"); 
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const data = await registerUser(name, email, password, role);
-      console.log("REGISTER RESPONSE:", data);
+      await registerUser(name, email, password);
+
       alert("Registration Successful");
+
+      navigate("/");   
+
     } catch (error) {
       console.error("Register error:", error);
       alert("Registration Failed");
@@ -29,6 +35,7 @@ function Register() {
         placeholder="Enter name"
         onChange={(e) => setName(e.target.value)}
       />
+
       <br /><br />
 
       <input
@@ -36,6 +43,7 @@ function Register() {
         placeholder="Enter email"
         onChange={(e) => setEmail(e.target.value)}
       />
+
       <br /><br />
 
       <input
@@ -43,12 +51,6 @@ function Register() {
         placeholder="Enter password"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <br /><br />
-
-      <select onChange={(e) => setRole(e.target.value)}>
-        <option value="USER">USER</option>
-        <option value="ADMIN">ADMIN</option>
-      </select>
 
       <br /><br />
 

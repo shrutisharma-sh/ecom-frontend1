@@ -1,26 +1,32 @@
 import { useState } from "react";
 import { loginUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 function Login({ setIsAuthenticated }) {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const data = await loginUser(email, password);
-    localStorage.setItem("token", data.token);
+    try {
+      const data = await loginUser(email, password);
 
-    setIsAuthenticated(true); 
-    alert("Login Successful");
+      localStorage.setItem("token", data.token);
 
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("Login Failed");
-  }
-};
+      setIsAuthenticated(true);
+      navigate("/");
+
+      alert("Login Successful");
+
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login Failed");
+    }
+  };
 
   return (
     <form onSubmit={handleLogin}>

@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./pages/Home";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,7 +24,7 @@ function App() {
 
    <Routes>
      
-      <Route path="/" element={<h1>Home Page</h1>} />
+       <Route path="/" element={<Home />} />
       <Route 
           path="/login" 
           element={<Login setIsAuthenticated={setIsAuthenticated} />} 
