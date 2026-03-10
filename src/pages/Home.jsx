@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { getAllProducts } from "../services/productService";
+import ProductCard from "../components/ProductCard";
+
 
 export default function Home() {
 
@@ -10,22 +14,42 @@ export default function Home() {
   ];
 
   const [index, setIndex] = useState(0);
+  const [products, setProducts] = useState([]);
+  
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % popupImages.length);
-    }, 2500);
+ useEffect(() => {
 
-    return () => clearInterval(interval);
-  }, []);
+  const fetchProducts = async () => {
+    try {
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products", error);
+    }
+  };
+
+  fetchProducts();
+
+}, []);
+
+// Trending image slider
+useEffect(() => {
+  const interval = setInterval(() => {
+    setIndex((prev) => (prev + 1) % popupImages.length);
+  }, 2500);
+
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <div className="w-full">
 
+
       {/* HERO SECTION */}
-      <section className="bg-gradient-to-r from-teal-500 to-blue-700 text-white py-20 px-10 flex items-center justify-between">
+      <section className="bg-gradient-to-r from-teal-500 to-blue-700 text-white py-20 px-10 flex flex-col md:flex-row items-center justify-between">
 
         <div className="max-w-xl">
+
           <h1 className="text-5xl font-bold leading-tight">
             Shop your way,
             <br />
@@ -36,13 +60,21 @@ export default function Home() {
             Discover the best products at unbeatable prices.
           </p>
 
-          <button className="mt-8 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
+          <button
+            onClick={() =>
+              document.getElementById("products").scrollIntoView({
+                behavior: "smooth"
+              })
+            }
+            className="mt-8 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition"
+          >
             Shop Now
           </button>
+
         </div>
 
         {/* HERO IMAGE */}
-        <div>
+        <div className="mt-10 md:mt-0">
           <img
             src="HERO_IMAGE_URL"
             alt="shopping"
@@ -53,7 +85,7 @@ export default function Home() {
       </section>
 
 
-      {/* POPUP IMAGE SCROLLER */}
+      {/* TRENDING IMAGE SCROLLER */}
       <section className="py-16 bg-gray-50 text-center">
 
         <h2 className="text-3xl font-bold mb-10">
@@ -81,6 +113,36 @@ export default function Home() {
       </section>
 
 
+      {/* FEATURED PRODUCTS FROM DATABASE */}
+      <section
+        id="products"
+        className="py-20 px-10 bg-white"
+      >
+
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Featured Products
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+          {products.length > 0 ? (
+            products.slice(0, 8).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+              />
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500">
+              No products available
+            </p>
+          )}
+
+        </div>
+
+      </section>
+
+
       {/* PRODUCT CATEGORY SECTION */}
       <section className="py-20 px-10">
 
@@ -88,7 +150,7 @@ export default function Home() {
           Shop by Category
         </h2>
 
-        <div className="grid grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
           <CategoryCard
             title="Electronics"
@@ -126,7 +188,7 @@ export default function Home() {
           Sign up now and start shopping smarter.
         </p>
 
-        <button className="mt-6 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold">
+        <button className="mt-6 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
           Register Now
         </button>
 
