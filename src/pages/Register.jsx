@@ -7,6 +7,7 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("USER");   // new state
 
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -17,13 +18,13 @@ function Register() {
     e.preventDefault();
 
     try {
-      await registerUser(name, email, password);
+      await registerUser(name, email, password, role);  // send role
 
       setIsError(false);
       setMessage("Registration Successful");
 
       setTimeout(() => {
-        navigate("/");  
+        navigate("/");
       }, 1200);
 
     } catch (error) {
@@ -102,6 +103,16 @@ function Register() {
           placeholder="Enter password"
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        {/* Role selection */}
+        <select
+          style={inputStyle}
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
 
         <button style={buttonStyle} type="submit">Register</button>
 
