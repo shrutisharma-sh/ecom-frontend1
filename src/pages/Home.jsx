@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { getAllProducts } from "../services/productService";
 import ProductCard from "../components/ProductCard";
-
 
 export default function Home() {
 
@@ -15,49 +13,43 @@ export default function Home() {
 
   const [index, setIndex] = useState(0);
   const [products, setProducts] = useState([]);
-  
 
- useEffect(() => {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const data = await getAllProducts();
-      setProducts(data);
-    } catch (error) {
-      console.error("Error fetching products", error);
-    }
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % popupImages.length);
+    }, 2500);
 
-  fetchProducts();
-
-}, []);
-
-// Trending image slider
-useEffect(() => {
-  const interval = setInterval(() => {
-    setIndex((prev) => (prev + 1) % popupImages.length);
-  }, 2500);
-
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-slate-950 text-slate-200">
 
-
-      {/* HERO SECTION */}
-      <section className="bg-gradient-to-r from-teal-500 to-blue-700 text-white py-20 px-10 flex flex-col md:flex-row items-center justify-between">
+      {/* HERO */}
+      <section className="min-h-screen flex flex-col md:flex-row items-center justify-between px-10 py-24 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
 
         <div className="max-w-xl">
 
-          <h1 className="text-5xl font-bold leading-tight">
-            Shop your way,
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+            Shop smarter,
             <br />
-            get rewards
+            <span className="text-indigo-400">live better</span>
           </h1>
 
-          <p className="mt-6 text-lg text-gray-200">
-            Discover the best products at unbeatable prices.
+          <p className="mt-6 text-lg text-slate-400">
+            Discover premium products with modern experience.
           </p>
 
           <button
@@ -66,7 +58,7 @@ useEffect(() => {
                 behavior: "smooth"
               })
             }
-            className="mt-8 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition"
+            className="mt-8 bg-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 hover:scale-105 transition shadow-lg"
           >
             Shop Now
           </button>
@@ -78,17 +70,17 @@ useEffect(() => {
           <img
             src="HERO_IMAGE_URL"
             alt="shopping"
-            className="w-[350px] rounded-xl shadow-lg"
+            className="w-[350px] rounded-2xl shadow-2xl hover:scale-105 transition duration-500"
           />
         </div>
 
       </section>
 
 
-      {/* TRENDING IMAGE SCROLLER */}
-      <section className="py-16 bg-gray-50 text-center">
+      {/* TRENDING */}
+      <section className="py-20 text-center">
 
-        <h2 className="text-3xl font-bold mb-10">
+        <h2 className="text-3xl font-bold mb-12">
           Trending Products
         </h2>
 
@@ -99,7 +91,7 @@ useEffect(() => {
               key={i}
               src={img}
               alt="product"
-              className={`absolute w-[250px] h-[300px] object-cover rounded-xl shadow-xl transition-all duration-700
+              className={`absolute w-[250px] h-[300px] object-cover rounded-2xl shadow-2xl border border-slate-800 transition-all duration-700
               ${
                 i === index
                   ? "opacity-100 scale-100 z-20"
@@ -113,11 +105,8 @@ useEffect(() => {
       </section>
 
 
-      {/* FEATURED PRODUCTS FROM DATABASE */}
-      <section
-        id="products"
-        className="py-20 px-10 bg-white"
-      >
+      {/* PRODUCTS */}
+      <section id="products" className="py-20 px-10">
 
         <h2 className="text-3xl font-bold text-center mb-12">
           Featured Products
@@ -127,13 +116,10 @@ useEffect(() => {
 
           {products.length > 0 ? (
             products.slice(0, 8).map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-              />
+              <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-500">
+            <p className="col-span-full text-center text-slate-500">
               No products available
             </p>
           )}
@@ -143,7 +129,7 @@ useEffect(() => {
       </section>
 
 
-      {/* PRODUCT CATEGORY SECTION */}
+      {/* CATEGORY */}
       <section className="py-20 px-10">
 
         <h2 className="text-3xl font-bold text-center mb-12">
@@ -152,43 +138,43 @@ useEffect(() => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
-          <CategoryCard
-            title="Electronics"
-            img="CATEGORY_IMAGE_URL_1"
-          />
+          <CategoryCard 
+  title="Electronics" 
+  img="https://images.unsplash.com/photo-1518770660439-4636190af475" 
+/>
 
-          <CategoryCard
-            title="Fashion"
-            img="CATEGORY_IMAGE_URL_2"
-          />
+<CategoryCard 
+  title="Fashion" 
+  img="https://images.unsplash.com/photo-1521334884684-d80222895322" 
+/>
 
-          <CategoryCard
-            title="Home"
-            img="CATEGORY_IMAGE_URL_3"
-          />
+<CategoryCard 
+  title="Home" 
+  img="https://images.unsplash.com/photo-1505691938895-1758d7feb511" 
+/>
 
-          <CategoryCard
-            title="Accessories"
-            img="CATEGORY_IMAGE_URL_4"
-          />
+<CategoryCard 
+  title="Accessories" 
+  img="https://images.unsplash.com/photo-1512499617640-c2f999098c01" 
+/>
 
         </div>
 
       </section>
 
 
-      {/* PROMO SECTION */}
-      <section className="bg-blue-700 text-white py-20 text-center">
+      {/* PROMO */}
+      <section className="py-20 text-center bg-gradient-to-r from-indigo-600 to-purple-600">
 
         <h2 className="text-4xl font-bold">
           Get 20% Off On Your First Order
         </h2>
 
-        <p className="mt-4 text-lg text-gray-200">
+        <p className="mt-4 text-lg text-slate-200">
           Sign up now and start shopping smarter.
         </p>
 
-        <button className="mt-6 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
+        <button className="mt-6 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:scale-105 transition">
           Register Now
         </button>
 
@@ -201,15 +187,15 @@ useEffect(() => {
 
 function CategoryCard({ title, img }) {
   return (
-    <div className="rounded-xl overflow-hidden shadow-lg hover:scale-105 transition cursor-pointer">
+    <div className="group rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 hover:-translate-y-1 hover:shadow-xl transition cursor-pointer">
 
       <img
         src={img}
         alt={title}
-        className="h-[220px] w-full object-cover"
+        className="h-[220px] w-full object-cover group-hover:scale-110 transition duration-500"
       />
 
-      <div className="p-4 text-center font-semibold text-lg">
+      <div className="p-4 text-center font-semibold text-lg text-slate-200 group-hover:text-indigo-400 transition">
         {title}
       </div>
 

@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import ProductDetails from "./pages/ProductDetails";
+import Orders from "./pages/Orders";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,36 +17,44 @@ function App() {
     setIsAuthenticated(!!token);
   }, []);
 
-
   return (
-   <> hello shruti 
+    <>
+      <Navbar 
+        isAuthenticated={isAuthenticated} 
+        setIsAuthenticated={setIsAuthenticated} 
+      />
 
-  <Navbar 
-   isAuthenticated={isAuthenticated} 
-        setIsAuthenticated={setIsAuthenticated} />
+      <Routes>
+        <Route path="/" element={<Home />} />
 
-   <Routes>
-     
-       <Route path="/" element={<Home />} />
-      <Route 
+        <Route 
           path="/login" 
           element={<Login setIsAuthenticated={setIsAuthenticated} />} 
         />
-      <Route path="/register" element={<Register/>} />
-      
-       <Route 
-        path="/cart" 
-        element={
-        <ProtectedRoute isAuthenticated={isAuthenticated}>
-        <h1>Cart Page</h1>
-        </ProtectedRoute>
-        } 
+
+        <Route path="/register" element={<Register />} />
+
+        <Route 
+          path="/cart" 
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Cart />
+            </ProtectedRoute>
+          } 
         />
-        <Route path="/cart" element={<Cart />} />
+
         <Route path="/product/:id" element={<ProductDetails />} />
-    </Routes>
-   </>
+        <Route 
+  path="/orders" 
+  element={
+    <ProtectedRoute isAuthenticated={isAuthenticated}>
+      <Orders />
+    </ProtectedRoute>
+  } 
+/>
+      </Routes>
+    </>
   )
 }
 
-export default App
+export default App;
